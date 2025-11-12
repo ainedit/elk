@@ -1,0 +1,185 @@
+#docker-compose cluster elversion: "3.8"
+x-logging: &default-logging
+  driver: fluentd
+  options:
+    fluentd-address: "127.0.0.1:24224"
+    tag: "docker.{{.Name}}"
+      #    fluentd-async-connect: "true"        # no bloquea si aún no está listo
+      #    mode: "non-blocking"                 # cola en memoria si hay picco
+
+services:
+  fluentd:
+    image: fluent/fluentd:v1.16-1
+    container_name: fluentd
+    user: root
+    command: -c /fluentd/etc/fluent.conf -q
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    volumes:
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf:ro
+      - ./logs:/fluentd/log
+      - ./fluentd/buffer:/fluentd/buffer
+    restart: unless-stopped
+    networks:
+      - elastic
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    container_name: es01
+    logging: *default-logging
+    hostname: es01 
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - esdata01:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    container_name: es02
+    logging: *default-logging
+    hostname: es02
+    environment:
+      - node.name=es02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - esdata02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    container_name: es03
+    logging: *default-logging
+    hostname: es03
+    environment:
+      - node.name=es03
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - esdata03:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.3
+    container_name: kibana
+    logging: *default-logging
+    hostname: kibana 
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+    depends_on:
+      - es01
+      - es02
+      - es03
+    ports:
+      - "5601:5601"
+    networks:
+      - elastic
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.9.3
+    container_name: logstash
+    logging: *default-logging
+    hostname: logstash
+    depends_on:
+      - es01
+    ports:
+      - "5044:5044" # Beats input
+      - "9600:9600" # Monitoring API
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+    networks:
+      - elastic
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.9.3
+    container_name: filebeat
+    logging: *default-logging
+    hostname: filebeat 
+    user: root
+    depends_on:
+      - logstash
+    command: ["--strict.perms=false", "-e"]
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      # Ejemplo: logs de contenedores Docker
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - elastic
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:7.9.3
+    container_name: metricbeat
+    logging: *default-logging
+    hostname: metricbeat 
+    user: root
+    depends_on:
+      - es01
+      - kibana
+    command: ["--strict.perms=false", "-e"]
+    volumes:
+      - ./metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+    networks:
+      - elastic
+
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  esdata01:
+    name: esdata01
+  esdata02:
+    name: esdata02
+  esdata03:
+    name: esdata03

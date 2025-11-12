@@ -1,0 +1,8 @@
+# Perfil "low"
+docker compose --env-file env/low.env up -d
+
+# Perfil "ingest"
+docker compose --env-file env/ingest.env up -d
+
+# Perfil "analytics"
+docker compose --env-file env/analytics.env up -d

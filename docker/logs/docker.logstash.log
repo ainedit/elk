@@ -14,3 +14,64 @@ Sending Logstash logs to /usr/share/logstash/logs which is now configured via lo
 [2025-11-11T11:16:22,442][INFO ][logstash.agent           ] Successfully started Logstash API endpoint {:port=>9600}
 [2025-11-11T11:16:27,420][INFO ][logstash.runner          ] Logstash shut down.
 [2025-11-11T11:16:27,435][ERROR][org.logstash.Logstash    ] java.lang.IllegalStateException: Logstash stopped processing because of an error: (SystemExit) exit
+OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.jruby.ext.openssl.SecurityHelper (file:/tmp/jruby-1/jruby49748124626196389jopenssl.jar) to field java.security.MessageDigest.provider
+WARNING: Please consider reporting this to the maintainers of org.jruby.ext.openssl.SecurityHelper
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Sending Logstash logs to /usr/share/logstash/logs which is now configured via log4j2.properties
+[2025-11-11T23:06:26,901][INFO ][logstash.runner          ] Starting Logstash {"logstash.version"=>"7.9.3", "jruby.version"=>"jruby 9.2.13.0 (2.5.7) 2020-08-03 9a89c94bcc OpenJDK 64-Bit Server VM 11.0.8+10-LTS on 11.0.8+10-LTS +indy +jit [linux-x86_64]"}
+[2025-11-11T23:06:26,950][INFO ][logstash.setting.writabledirectory] Creating directory {:setting=>"path.queue", :path=>"/usr/share/logstash/data/queue"}
+[2025-11-11T23:06:26,990][INFO ][logstash.setting.writabledirectory] Creating directory {:setting=>"path.dead_letter_queue", :path=>"/usr/share/logstash/data/dead_letter_queue"}
+[2025-11-11T23:06:27,895][INFO ][logstash.agent           ] No persistent UUID file found. Generating new UUID {:uuid=>"da18cb00-935f-40b8-a29f-154c2ba72358", :path=>"/usr/share/logstash/data/uuid"}
+[2025-11-11T23:06:28,816][INFO ][logstash.config.source.local.configpathloader] No config files found in path {:path=>"/usr/share/logstash/pipeline/*"}
+[2025-11-11T23:06:28,824][ERROR][logstash.config.sourceloader] No configuration found in the configured sources.
+[2025-11-11T23:06:29,058][INFO ][logstash.agent           ] Successfully started Logstash API endpoint {:port=>9600}
+[2025-11-11T23:06:34,431][INFO ][logstash.runner          ] Logstash shut down.
+[2025-11-11T23:06:35,546][ERROR][org.logstash.Logstash    ] java.lang.IllegalStateException: Logstash stopped processing because of an error: (SystemExit) exit
+OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.jruby.ext.openssl.SecurityHelper (file:/tmp/jruby-1/jruby10806731001116542971jopenssl.jar) to field java.security.MessageDigest.provider
+WARNING: Please consider reporting this to the maintainers of org.jruby.ext.openssl.SecurityHelper
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Sending Logstash logs to /usr/share/logstash/logs which is now configured via log4j2.properties
+[2025-11-12T11:25:02,112][INFO ][logstash.runner          ] Starting Logstash {"logstash.version"=>"7.9.3", "jruby.version"=>"jruby 9.2.13.0 (2.5.7) 2020-08-03 9a89c94bcc OpenJDK 64-Bit Server VM 11.0.8+10-LTS on 11.0.8+10-LTS +indy +jit [linux-x86_64]"}
+[2025-11-12T11:25:09,545][INFO ][logstash.config.source.local.configpathloader] No config files found in path {:path=>"/usr/share/logstash/pipeline/*"}
+[2025-11-12T11:25:09,706][ERROR][logstash.config.sourceloader] No configuration found in the configured sources.
+[2025-11-12T11:25:12,272][INFO ][logstash.agent           ] Successfully started Logstash API endpoint {:port=>9600}
+[2025-11-12T11:25:15,914][INFO ][logstash.runner          ] Logstash shut down.
+[2025-11-12T11:25:16,575][ERROR][org.logstash.Logstash    ] java.lang.IllegalStateException: Logstash stopped processing because of an error: (SystemExit) exit
+OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.jruby.ext.openssl.SecurityHelper (file:/tmp/jruby-1/jruby10491316317001546949jopenssl.jar) to field java.security.MessageDigest.provider
+WARNING: Please consider reporting this to the maintainers of org.jruby.ext.openssl.SecurityHelper
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Sending Logstash logs to /usr/share/logstash/logs which is now configured via log4j2.properties
+[2025-11-12T11:35:51,836][INFO ][logstash.runner          ] Starting Logstash {"logstash.version"=>"7.9.3", "jruby.version"=>"jruby 9.2.13.0 (2.5.7) 2020-08-03 9a89c94bcc OpenJDK 64-Bit Server VM 11.0.8+10-LTS on 11.0.8+10-LTS +indy +jit [linux-x86_64]"}
+[2025-11-12T11:35:52,243][INFO ][logstash.setting.writabledirectory] Creating directory {:setting=>"path.queue", :path=>"/usr/share/logstash/data/queue"}
+[2025-11-12T11:35:52,346][INFO ][logstash.setting.writabledirectory] Creating directory {:setting=>"path.dead_letter_queue", :path=>"/usr/share/logstash/data/dead_letter_queue"}
+[2025-11-12T11:35:55,883][INFO ][logstash.agent           ] No persistent UUID file found. Generating new UUID {:uuid=>"e41c570b-1bed-4717-b9c5-08b005439130", :path=>"/usr/share/logstash/data/uuid"}
+[2025-11-12T11:36:00,266][INFO ][logstash.config.source.local.configpathloader] No config files found in path {:path=>"/usr/share/logstash/pipeline/*"}
+[2025-11-12T11:36:00,315][ERROR][logstash.config.sourceloader] No configuration found in the configured sources.
+[2025-11-12T11:36:01,259][INFO ][logstash.agent           ] Successfully started Logstash API endpoint {:port=>9600}
+[2025-11-12T11:36:06,070][INFO ][logstash.runner          ] Logstash shut down.
+[2025-11-12T11:36:06,222][ERROR][org.logstash.Logstash    ] java.lang.IllegalStateException: Logstash stopped processing because of an error: (SystemExit) exit
+OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.jruby.ext.openssl.SecurityHelper (file:/tmp/jruby-1/jruby17448847402519226644jopenssl.jar) to field java.security.MessageDigest.provider
+WARNING: Please consider reporting this to the maintainers of org.jruby.ext.openssl.SecurityHelper
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Sending Logstash logs to /usr/share/logstash/logs which is now configured via log4j2.properties
+[2025-11-12T12:06:24,081][INFO ][logstash.runner          ] Starting Logstash {"logstash.version"=>"7.9.3", "jruby.version"=>"jruby 9.2.13.0 (2.5.7) 2020-08-03 9a89c94bcc OpenJDK 64-Bit Server VM 11.0.8+10-LTS on 11.0.8+10-LTS +indy +jit [linux-x86_64]"}
+[2025-11-12T12:06:24,408][INFO ][logstash.setting.writabledirectory] Creating directory {:setting=>"path.queue", :path=>"/usr/share/logstash/data/queue"}
+[2025-11-12T12:06:25,351][INFO ][logstash.setting.writabledirectory] Creating directory {:setting=>"path.dead_letter_queue", :path=>"/usr/share/logstash/data/dead_letter_queue"}
+[2025-11-12T12:06:30,173][INFO ][logstash.agent           ] No persistent UUID file found. Generating new UUID {:uuid=>"94b92820-4dd5-4ef3-b9b4-330f0624c8b0", :path=>"/usr/share/logstash/data/uuid"}
+[2025-11-12T12:06:39,850][INFO ][logstash.config.source.local.configpathloader] No config files found in path {:path=>"/usr/share/logstash/pipeline/*"}
+[2025-11-12T12:06:40,188][ERROR][logstash.config.sourceloader] No configuration found in the configured sources.
+[2025-11-12T12:06:43,027][INFO ][logstash.agent           ] Successfully started Logstash API endpoint {:port=>9600}
+[2025-11-12T12:06:46,873][INFO ][logstash.runner          ] Logstash shut down.
+[2025-11-12T12:06:47,332][ERROR][org.logstash.Logstash    ] java.lang.IllegalStateException: Logstash stopped processing because of an error: (SystemExit) exit

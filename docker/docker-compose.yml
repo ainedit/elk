@@ -1,4 +1,11 @@
-#docker-compose cluster elversion: "3.8"
+#docker-compose 1ES, Monitorizacion logs y configuraciones de rendimiento
+#Modos de ejecución:
+#Perfil low
+#docker compose --env-file env/low.env up -d
+# Perfil "ingest"
+#docker compose --env-file env/ingest.env up -d
+# Perfil "analytics"
+#docker compose --env-file env/analytics.env up -d
 x-logging: &default-logging
   driver: fluentd
   options:
@@ -8,6 +15,20 @@ x-logging: &default-logging
       #    mode: "non-blocking"                 # cola en memoria si hay picco
 
 services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    logging: *default-logging
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+    networks: [elastic]
+    restart: unless-stopped
+
+
   fluentd:
     image: fluent/fluentd:v1.16-1
     container_name: fluentd
@@ -31,13 +52,20 @@ services:
     hostname: es01 
     environment:
       - node.name=es01
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - cluster.name=${CLUSTER_NAME:-es-docker-cluster}
+      - discovery.type=${DISCOVERY_TYPE:-single-node}
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - xpack.security.enabled=false
-      - xpack.monitoring.collection.enabled=true
+      - xpack.security.enabled=${XPACK_SECURITY:-false}
+      # JVM / heap
+      - ES_JAVA_OPTS=-Xms${ES_HEAP} -Xmx${ES_HEAP} ${ES_EXTRA_JVM_OPTS:-}
+      # Tuning de I/O / indexación
+      - indices.memory.index_buffer_size=${INDEX_BUFFER:-10%}
+      - thread_pool.write.queue_size=${WRITE_Q_SIZE:-200}
+    deploy:
+      resources:
+        limits:
+          cpus: "${CPU_LIMIT:-2.0}"
+          memory: "${MEM_LIMIT:-4g}" 
     ulimits:
       memlock:
         soft: -1
@@ -52,58 +80,6 @@ services:
     networks:
       - elastic
 
-  es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
-    container_name: es02
-    logging: *default-logging
-    hostname: es02
-    environment:
-      - node.name=es02
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - xpack.security.enabled=false
-      - xpack.monitoring.collection.enabled=true
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    volumes:
-      - esdata02:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-
-  es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
-    container_name: es03
-    logging: *default-logging
-    hostname: es03
-    environment:
-      - node.name=es03
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-      - xpack.security.enabled=false
-      - xpack.monitoring.collection.enabled=true
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    volumes:
-      - esdata03:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-
   kibana:
     image: docker.elastic.co/kibana/kibana:7.9.3
     container_name: kibana
@@ -111,12 +87,30 @@ services:
     hostname: kibana 
     environment:
       - ELASTICSEARCH_HOSTS=http://es01:9200
+      - SERVER_HOST=0.0.0.0
+      - SERVER_NAME=kibana
+      - NODE_OPTIONS=--max-old-space-size=2048
+      # Desactivar lo que no uses:
+      - XPACK_APM_ENABLED=false
+      - XPACK_CANVAS_ENABLED=false
+      - XPACK_GRAPH_ENABLED=false
+      - XPACK_INFRA_ENABLED=false
+      - XPACK_ML_ENABLED=false
+      - XPACK_REPORTING_ENABLED=false
+      - XPACK_SIEM_ENABLED=false
+      - XPACK_MAPS_ENABLED=false
+      - TELEMETRY_ENABLED=false
     depends_on:
       - es01
-      - es02
-      - es03
     ports:
       - "5601:5601"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2g
+    volumes:
+      - kibana-data:/usr/share/kibana/data
     networks:
       - elastic
 
@@ -178,8 +172,6 @@ networks:
 
 volumes:
   esdata01:
-    name: esdata01
-  esdata02:
-    name: esdata02
-  esdata03:
-    name: esdata03
+    name: esdata01_1
+  kibana-data:
+    name: kibana-data_1
