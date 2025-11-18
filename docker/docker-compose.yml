@@ -127,6 +127,7 @@ services:
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logs_app:/logs
     networks:
       - elastic
 
@@ -144,6 +145,7 @@ services:
       # Ejemplo: logs de contenedores Docker
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./logs_app:/logs
     networks:
       - elastic
 

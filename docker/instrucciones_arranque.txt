@@ -1,3 +1,11 @@
+#Comando para ver en tiempo real los contenedores creados
+watch -n1 'docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"'
+
+#Si se queda algún contenedor pillado
+sudo systemctl restart docker
+
+docker compose up fluentd -d
+
 # Perfil "low"
 docker compose --env-file env/low.env up -d
 
